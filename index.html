@@ -1108,6 +1108,8 @@
     window.addEventListener('resize', resize);
 
     // ライト
+    scene.background = new THREE.Color(0x4a7fb5);
+    scene.fog = new THREE.Fog(0x4a7fb5, 15, 40);
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     const sun = new THREE.DirectionalLight(0xfff5e0, 1.5);
     sun.position.set(6, 10, 6);
