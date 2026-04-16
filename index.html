@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>足助川合自動車（株）｜愛知県豊田市の車検・整備・修理</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy:      #0d2137;
+      --navy2:     #1a3a5c;
+      --orange:    #e8750a;
+      --orange2:   #ff9334;
+      --light:     #f8f5f1;
+      --white:     #ffffff;
+      --text:      #2c2c2c;
+      --gray:      #888;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* ======== NAVBAR ======== */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+      padding: 0 40px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.4s, box-shadow 0.4s;
+    }
+    #navbar.scrolled {
+      background: var(--navy);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+    .nav-logo {
+      color: white;
+      font-size: 1.15rem;
+      font-weight: 900;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+    .nav-logo em { color: var(--orange2); font-style: normal; }
+    .nav-links { display: flex; gap: 4px; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      padding: 8px 16px;
+      font-size: 0.88rem;
+      border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
+      letter-spacing: 0.05em;
+    }
+    .nav-links a:hover {
+      color: white;
+      background: rgba(255,255,255,0.12);
+    }
+    .nav-cta {
+      background: var(--orange) !important;
+      color: white !important;
+      border-radius: 20px !important;
+      font-weight: bold !important;
+    }
+    .nav-cta:hover { background: var(--orange2) !important; }
+
+    /* ======== HERO ======== */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 620px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(13,33,55,0.88) 0%, rgba(13,33,55,0.6) 60%, rgba(232,117,10,0.25) 100%),
+        url('images/hero.jpg') center/cover no-repeat;
+      background-color: var(--navy);
+    }
+    /* 写真がない間の仮背景 */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 50%, #2a4a1e 100%);
+      opacity: 0; /* 写真があれば0のまま */
+    }
+    .hero-particles {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle, rgba(255,147,52,0.15) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-content {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+      padding-top: 70px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(232,117,10,0.2);
+      border: 1px solid rgba(232,117,10,0.5);
+      color: var(--orange2);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: bold;
+      letter-spacing: 0.1em;
+      margin-bottom: 28px;
+      animation: fadeInUp 0.8s ease both;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--orange2);
+      border-radius: 50%;
+      animation: pulse 1.5s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+    .hero-title {
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 900;
+      color: white;
+      line-height: 1.3;
+      margin-bottom: 24px;
+      animation: fadeInUp 0.8s 0.1s ease both;
+    }
+    .hero-title span {
+      color: var(--orange2);
+      position: relative;
+    }
+    .hero-title span::after {
+      content: '';
+      position: absolute;
+      bottom: 2px; left: 0; right: 0;
+      height: 3px;
+      background: var(--orange2);
+      border-radius: 2px;
+    }
+    .hero-desc {
+      color: rgba(255,255,255,0.82);
+      font-size: 1.05rem;
+      max-width: 540px;
+      line-height: 2;
+      margin-bottom: 40px;
+      animation: fadeInUp 0.8s 0.2s ease both;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.8s 0.3s ease both;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--orange);
+      color: white;
+      padding: 16px 36px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(232,117,10,0.4);
+    }
+    .btn-primary:hover {
+      background: var(--orange2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(232,117,10,0.5);
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 2px solid rgba(255,255,255,0.5);
+      color: white;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .btn-outline:hover {
+      border-color: white;
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+    .hero-stats {
+      position: absolute;
+      bottom: 48px; right: 40px;
+      display: flex;
+      gap: 2px;
+      animation: fadeInUp 0.8s 0.4s ease both;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 20px 28px;
+      text-align: center;
+      color: white;
+    }
+    .stat-card .num {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--orange2);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-card .label { font-size: 0.78rem; opacity: 0.8; }
+    .hero-scroll {
+      position: absolute;
+      bottom: 32px; left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.5);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: bounce 2s ease infinite;
+    }
+    .hero-scroll::after {
+      content: '';
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+    }
+
+    /* ======== THREE.JS CANVAS ======== */
+    #hero-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero-bg, .hero-particles { z-index: 0; }
+    .hero-content, .hero-stats, .hero-scroll { z-index: 2; }
+
+    /* ======== DAIHATSU BADGE ======== */
+    .daihatsu-strip {
+      background: var(--navy);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+    .daihatsu-strip p {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+    }
+    .daihatsu-logo {
+      background: white;
+      color: var(--navy);
+      font-weight: 900;
+      font-size: 1.2rem;
+      padding: 6px 20px;
+      border-radius: 6px;
+      letter-spacing: 0.08em;
+    }
+
+    /* ======== SCROLL ANIMATIONS ======== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ======== SECTION BASE ======== */
+    section { padding: 100px 40px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 64px; }
+    .section-header .en {
+      font-size: 0.78rem;
+      font-weight: bold;
+      letter-spacing: 0.25em;
+      color: var(--orange);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .section-header h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+    .section-header p { color: var(--gray); font-size: 0.95rem; max-width: 520px; margin: 0 auto; }
+    .section-header .divider {
+      width: 48px; height: 4px;
+      background: linear-gradient(to right, var(--orange), var(--orange2));
+      border-radius: 2px;
+      margin: 20px auto 0;
+    }
+
+    /* ======== ABOUT ======== */
+    .about { background: var(--light); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .about-images {
+      position: relative;
+    }
+    .about-img-main {
+      width: 100%;
+      height: 420px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    .about-img-main img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .about-img-main .img-placeholder {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.85rem;
+    }
+    .about-img-sub {
+      position: absolute;
+      bottom: -24px; right: -24px;
+      width: 200px; height: 160px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 4px solid white;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+    .about-img-sub img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .about-img-sub .img-placeholder {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, var(--orange) 0%, var(--orange2) 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.5); font-size: 0.75rem;
+    }
+    .about-badge {
+      position: absolute;
+      top: -16px; left: -16px;
+      background: var(--orange);
+      color: white;
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      box-shadow: 0 4px 20px rgba(232,117,10,0.4);
+    }
+    .about-badge .num { font-size: 1.6rem; line-height: 1; }
+    .about-badge .unit { font-size: 0.7rem; }
+    .about-text h3 {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: var(--navy);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .about-text h3 span { color: var(--orange); }
+    .about-text p { color: #555; margin-bottom: 16px; font-size: 0.97rem; }
+    .about-table {
+      margin-top: 32px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e8e0d8;
+    }
+    .about-table table { width: 100%; border-collapse: collapse; }
+    .about-table tr:not(:last-child) td { border-bottom: 1px solid #e8e0d8; }
+    .about-table td {
+      padding: 12px 16px;
+      font-size: 0.92rem;
+    }
+    .about-table td:first-child {
+      background: #fff8f2;
+      color: var(--orange);
+      font-weight: bold;
+      width: 90px;
+    }
+
+    /* ======== PHOTO GALLERY ======== */
+    .gallery { background: var(--navy); padding: 80px 40px; }
+    .gallery .section-header h2 { color: white; }
+    .gallery .section-header p { color: rgba(255,255,255,0.6); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: 240px 240px;
+      gap: 12px;
+    }
+    .gallery-item {
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+    .gallery-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(13,33,55,0.3);
+      transition: opacity 0.3s;
+    }
+    .gallery-item:hover::after { opacity: 0; }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .gallery-item:hover img { transform: scale(1.06); }
+    .gallery-item .img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.75rem;
+    }
+    /* レイアウト */
+    .gallery-item:nth-child(1) { grid-column: 1 / 3; grid-row: 1; }
+    .gallery-item:nth-child(2) { grid-column: 3; grid-row: 1; }
+    .gallery-item:nth-child(3) { grid-column: 4; grid-row: 1; }
+    .gallery-item:nth-child(4) { grid-column: 1; grid-row: 2; }
+    .gallery-item:nth-child(5) { grid-column: 2; grid-row: 2; }
+    .gallery-item:nth-child(6) { grid-column: 3 / 5; grid-row: 2; }
+    .gal-bg-1  { background: linear-gradient(135deg, #1e3a5f, #2a5298); }
+    .gal-bg-2  { background: linear-gradient(135deg, #2a2a2a, #444); }
+    .gal-bg-3  { background: linear-gradient(135deg, #1a3a2a, #2d5a3d); }
+    .gal-bg-4  { background: linear-gradient(135deg, #3a1a1a, #5a2d2d); }
+    .gal-bg-5  { background: linear-gradient(135deg, #2a1a3a, #4a2d5a); }
+    .gal-bg-6  { background: linear-gradient(135deg, #3a2a1a, #5a4a2d); }
+
+    /* ======== SERVICES ======== */
+    .services { background: var(--light); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+    .svc-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+    .svc-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+    }
+    .svc-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(to right, var(--orange), var(--orange2));
+    }
+    .svc-img {
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+    }
+    .svc-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    .svc-card:hover .svc-img img { transform: scale(1.05); }
+    .svc-img .img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 8px;
+      font-size: 2.5rem;
+    }
+    .svc-body { padding: 24px; }
+    .svc-icon {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--orange), var(--orange2));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 14px;
+    }
+    .svc-body h3 {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .svc-body p { font-size: 0.88rem; color: #666; line-height: 1.7; }
+
+    /* ======== STAFF ======== */
+    .staff { background: white; }
+    .staff-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+    }
+    .staff-card {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      transition: transform 0.3s;
+    }
+    .staff-card:hover { transform: translateY(-6px); }
+    .staff-img {
+      height: 260px;
+      overflow: hidden;
+      background: var(--navy2);
+      position: relative;
+    }
+    .staff-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+    .staff-img .img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.8rem;
+    }
+    .staff-img .img-placeholder .avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+    }
+    .staff-body {
+      padding: 20px;
+      background: white;
+    }
+    .staff-body .role {
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: var(--orange);
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+    .staff-body h3 {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .staff-body p { font-size: 0.83rem; color: #666; line-height: 1.7; }
+
+    /* ======== CTA BANNER ======== */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 60%, #1a3a1a 100%);
+      padding: 80px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: rgba(232,117,10,0.08);
+    }
+    .cta-banner h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 900;
+      color: white;
+      margin-bottom: 12px;
+    }
+    .cta-banner p { color: rgba(255,255,255,0.7); margin-bottom: 40px; }
+    .cta-tel {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      color: var(--orange2);
+      display: block;
+      text-decoration: none;
+      margin-bottom: 8px;
+      transition: opacity 0.2s;
+    }
+    .cta-tel:hover { opacity: 0.85; }
+    .cta-hours { color: rgba(255,255,255,0.55); font-size: 0.9rem; margin-bottom: 32px; }
+
+    /* ======== ACCESS ======== */
+    .access { background: var(--light); }
+    .access-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .access-info h3 {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 24px;
+    }
+    .info-list { list-style: none; }
+    .info-list li {
+      display: flex;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid #e0d8d0;
+      font-size: 0.95rem;
+    }
+    .info-list li:last-child { border-bottom: none; }
+    .info-list .key {
+      color: var(--orange);
+      font-weight: bold;
+      min-width: 80px;
+    }
+    .tel-box {
+      margin-top: 28px;
+      background: var(--navy);
+      border-radius: 14px;
+      padding: 24px 28px;
+      text-align: center;
+    }
+    .tel-box p { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-bottom: 8px; }
+    .tel-box a {
+      display: block;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--orange2);
+      text-decoration: none;
+    }
+    .tel-box .hours { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 6px; }
+    .map-wrap {
+      border-radius: 16px;
+      overflow: hidden;
+      height: 380px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+    .map-wrap iframe { width: 100%; height: 100%; border: 0; }
+
+    /* ======== FOOTER ======== */
+    footer {
+      background: #070f18;
+      color: rgba(255,255,255,0.4);
+      padding: 40px;
+      text-align: center;
+    }
+    footer .foot-logo {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: white;
+      margin-bottom: 8px;
+    }
+    footer .foot-logo span { color: var(--orange2); }
+    footer p { font-size: 0.82rem; }
+
+    /* ======== RESPONSIVE ======== */
+    @media (max-width: 960px) {
+      section { padding: 80px 24px; }
+      .about-grid, .access-grid { grid-template-columns: 1fr; gap: 48px; }
+      .about-img-sub { display: none; }
+      .services-grid { grid-template-columns: 1fr 1fr; }
+      .staff-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(3, 200px);
+      }
+      .gallery-item:nth-child(1) { grid-column: 1 / 3; grid-row: 1; }
+      .gallery-item:nth-child(2) { grid-column: 1; grid-row: 2; }
+      .gallery-item:nth-child(3) { grid-column: 2; grid-row: 2; }
+      .gallery-item:nth-child(4) { grid-column: 1; grid-row: 3; }
+      .gallery-item:nth-child(5) { grid-column: 2; grid-row: 3; }
+      .gallery-item:nth-child(6) { display: none; }
+    }
+    @media (max-width: 640px) {
+      #navbar { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero-content { padding: 0 20px; padding-top: 70px; }
+      .hero-stats { display: none; }
+      .services-grid, .staff-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ナビゲーション -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">足助川合自動車<em>（株）</em></a>
+  <ul class="nav-links">
+    <li><a href="#about">会社について</a></li>
+    <li><a href="#services">サービス</a></li>
+    <li><a href="#staff">スタッフ</a></li>
+    <li><a href="#access">アクセス</a></li>
+    <li><a href="#contact" class="nav-cta">📞 お電話</a></li>
+  </ul>
+</nav>
+
+<!-- ヒーロー -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-particles"></div>
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">愛知県豊田市 足助地区のくるま屋さん</div>
+    <h1 class="hero-title">
+      暮らしの足を支え<br>
+      地元の人を<span>愛し、愛される</span>
+    </h1>
+    <p class="hero-desc">
+      車検・整備・修理・中古車販売まで。<br>
+      創業から地域のみなさまとともに歩んできた、<br>
+      家族経営のあなたの街のくるま屋さんです。
+    </p>
+    <div class="hero-actions">
+      <a href="tel:0565-67-2344" class="btn-primary">📞 0565-67-2344</a>
+      <a href="#services" class="btn-outline">サービスを見る →</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-card">
+      <div class="num">30<small style="font-size:1rem">年+</small></div>
+      <div class="label">地域密着の実績</div>
+    </div>
+    <div class="stat-card" style="border-left: 1px solid rgba(255,255,255,0.15);">
+      <div class="num">6</div>
+      <div class="label">充実のサービス</div>
+    </div>
+    <div class="stat-card" style="border-left: 1px solid rgba(255,255,255,0.15);">
+      <div class="num">4</div>
+      <div class="label">スタッフ在籍</div>
+    </div>
+  </div>
+  <div class="hero-scroll">SCROLL</div>
+</section>
+
+<!-- ダイハツ帯 -->
+<div class="daihatsu-strip">
+  <p>正規販売代理店</p>
+  <div class="daihatsu-logo">DAIHATSU</div>
+  <p>ダイハツ車の新車・中古車販売、整備はお任せください</p>
+</div>
+
+<!-- 会社について -->
+<section class="about" id="about">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="en">ABOUT US</div>
+      <h2>足助川合自動車（株）について</h2>
+      <p>地域に根ざした家族経営で、みなさまの大切なお車をお守りします。</p>
+      <div class="divider"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-images reveal-left">
+        <div class="about-badge"><div class="num">30</div><div class="unit">年以上</div></div>
+        <div class="about-img-main">
+          <!-- 写真: images/about-main.jpg に集合写真を入れてください -->
+          <img src="images/about-main.jpg" alt="足助川合自動車スタッフ"
+               onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'>📸 staff-group.jpg を配置してください</div>'">
+        </div>
+        <div class="about-img-sub">
+          <!-- 写真: images/about-sub.jpg に外観写真を入れてください -->
+          <img src="images/about-sub.jpg" alt="店舗外観"
+               onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'>外観写真</div>'">
+        </div>
+      </div>
+      <div class="about-text reveal-right">
+        <h3>地域の「困った」を<br><span>ずっと支え続ける</span>くるま屋</h3>
+        <p>川合忍が個人事業として創業し、平成26年に株式会社化。現在は息子の敏晴が社長を務め、家族みんなで地域のお客様をサポートしています。</p>
+        <p>「お客さんからの紹介がつながって今、こうやっておれる」という言葉のとおり、長年のお付き合いとご紹介によって支えていただいてきました。公共交通の少ない山村地域で、みなさまの大切なくるまを守り続けています。</p>
+        <div class="about-table">
+          <table>
+            <tr><td>会社名</td><td>足助川合自動車株式会社</td></tr>
+            <tr><td>所在地</td><td>愛知県豊田市平沢町中ノ田１番地</td></tr>
+            <tr><td>電話</td><td>0565-67-2344</td></tr>
+            <tr><td>営業時間</td><td>午前9時〜午後5時（昼休憩1時間）</td></tr>
+            <tr><td>定休日</td><td>日曜・祝日</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- フォトギャラリー -->
+<section class="gallery" id="gallery">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="en" style="color:var(--orange2)">GALLERY</div>
+      <h2>ギャラリー</h2>
+      <p style="color:rgba(255,255,255,0.6)">日々の仕事の様子をご覧ください</p>
+      <div class="divider"></div>
+    </div>
+    <div class="gallery-grid">
+      <!-- 写真1: 外観 → images/gallery-1.jpg -->
+      <div class="gallery-item">
+        <img src="images/gallery-1.jpg" alt="店舗外観"
+             onerror="this.parentNode.innerHTML='<div class=\'img-placeholder gal-bg-1\'>🏪<br>shop-exterior.jpg</div>'">
+      </div>
+      <!-- 写真2: 整備作業 → images/gallery-2.jpg -->
+      <div class="gallery-item">
+        <img src="images/gallery-2.jpg" alt="整備作業"
+             onerror="this.parentNode.innerHTML='<div class=\'img-placeholder gal-bg-2\'>🔧<br>整備作業</div>'">
+      </div>
+      <!-- 写真3: オイル交換 → images/gallery-3.jpg -->
+      <div class="gallery-item">
+        <img src="images/gallery-3.jpg" alt="オイル交換"
+             onerror="this.parentNode.innerHTML='<div class=\'img-placeholder gal-bg-3\'>🛢️<br>オイル交換</div>'">
+      </div>
+      <!-- 写真4: タイヤ交換 → images/gallery-4.jpg -->
+      <div class="gallery-item">
+        <img src="images/gallery-4.jpg" alt="タイヤ交換"
+             onerror="this.parentNode.innerHTML='<div class=\'img-placeholder gal-bg-4\'>🚗<br>タイヤ交換</div>'">
+      </div>
+      <!-- 写真5: 接客 → images/gallery-5.jpg -->
+      <div class="gallery-item">
+        <img src="images/gallery-5.jpg" alt="接客"
+             onerror="this.parentNode.innerHTML='<div class=\'img-placeholder gal-bg-5\'>😊<br>接客</div>'">
+      </div>
+      <!-- 写真6: 工場内 → images/gallery-6.jpg -->
+      <div class="gallery-item">
+        <img src="images/gallery-6.jpg" alt="工場内"
+             onerror="this.parentNode.innerHTML='<div class=\'img-placeholder gal-bg-6\'>⚙️<br>工場内</div>'">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- サービス -->
+<section class="services" id="services">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="en">SERVICES</div>
+      <h2>サービス・メニュー</h2>
+      <p>車のことならなんでもお気軽にご相談ください</p>
+      <div class="divider"></div>
+    </div>
+    <div class="services-grid reveal">
+      <div class="svc-card">
+        <div class="svc-img">
+          <img src="images/svc-inspection.jpg" alt="車検"
+               onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\' style=\'background:linear-gradient(135deg,#1e3a5f,#2a5298);\'>🔧</div>'">
+        </div>
+        <div class="svc-body">
+          <div class="svc-icon">🔧</div>
+          <h3>車検・法定点検</h3>
+          <p>国家資格を持つ整備士が丁寧に点検・整備。安心してお任せください。</p>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-img">
+          <img src="images/svc-oil.jpg" alt="オイル交換"
+               onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\' style=\'background:linear-gradient(135deg,#2c1a00,#5a3800);\'>🛢️</div>'">
+        </div>
+        <div class="svc-body">
+          <div class="svc-icon">🛢️</div>
+          <h3>オイル・消耗品交換</h3>
+          <p>エンジンオイル、バッテリー、ブレーキパッドなど消耗品の交換もお任せ。</p>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-img">
+          <img src="images/svc-tire.jpg" alt="タイヤ交換"
+               onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\' style=\'background:linear-gradient(135deg,#1a1a1a,#3a3a3a);\'>🚗</div>'">
+        </div>
+        <div class="svc-body">
+          <div class="svc-icon">🚗</div>
+          <h3>タイヤ交換</h3>
+          <p>季節に合わせたタイヤ交換。タイヤ選びのご相談も承ります。</p>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-img">
+          <img src="images/svc-repair.jpg" alt="修理・整備"
+               onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\' style=\'background:linear-gradient(135deg,#1a2a1a,#2a4a2a);\'>⚙️</div>'">
+        </div>
+        <div class="svc-body">
+          <div class="svc-icon">⚙️</div>
+          <h3>自動車修理・整備全般</h3>
+          <p>エンジンからボディまで幅広い修理・整備に対応。どんなことでもご相談を。</p>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-img">
+          <img src="images/svc-car.jpg" alt="中古車販売"
+               onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\' style=\'background:linear-gradient(135deg,#2a1a00,#6a4400);\'>🏪</div>'">
+        </div>
+        <div class="svc-body">
+          <div class="svc-icon">🏪</div>
+          <h3>中古車販売</h3>
+          <p>地域のお客様に合った中古車をご提案。ダイハツ車が得意です。</p>
+        </div>
+      </div>
+      <div class="svc-card">
+        <div class="svc-img">
+          <img src="images/svc-tow.jpg" alt="レッカー"
+               onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\' style=\'background:linear-gradient(135deg,#2a0000,#5a1a1a);\'>🚛</div>'">
+        </div>
+        <div class="svc-body">
+          <div class="svc-icon">🚛</div>
+          <h3>レッカーサービス</h3>
+          <p>急なトラブルにも迅速対応。困ったときはすぐにお電話ください。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- スタッフ -->
+<section class="staff" id="staff">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="en">OUR STAFF</div>
+      <h2>スタッフ紹介</h2>
+      <p>家族で力を合わせて、地域のお客様をお迎えします</p>
+      <div class="divider"></div>
+    </div>
+    <div class="staff-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="staff-card">
+        <div class="staff-img" style="background:linear-gradient(135deg,#1e3a5f,#2a5298)">
+          <img src="images/staff-shinobu.jpg" alt="川合忍"
+               onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'><div class=\'avatar\'>👨</div>川合 忍さんの写真</div>'">
+        </div>
+        <div class="staff-body">
+          <div class="role">専務・創業者</div>
+          <h3>川合 忍</h3>
+          <p>「大将」と慕われる創業者。長年の経験と地域への思いで会社を支えます。</p>
+        </div>
+      </div>
+      <div class="staff-card">
+        <div class="staff-img" style="background:linear-gradient(135deg,#1a3a1a,#2d5a3d)">
+          <img src="images/staff-toshiharu.jpg" alt="川合敏晴"
+               onerror="this.parentNode.innerHTML='<div class=\'img-placeholder\'><div class=\'avatar\'>👨</div>川合 敏晴さんの写真</div>'">
+        </div>
+        <div class="staff-body">
+          <div class="role">代表取締役社長</div>
+          <h3>川合 敏晴</h3>
+          <p>2級自動車整備士。誠実な仕事でお客様の笑顔を大切にしています。</p>
+        </div>
+      </div>
+      <div class="staff-card">
+        <div class="staff-img" style="background:linear-gradient(135deg,#3a1a2a,#5a2d4a); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:20px;">
+          <div style="display:flex; gap:16px; justify-content:center;">
+            <div style="text-align:center;">
+              <img src="images/staff-fujiko.png" alt="川合富士子" style="width:80px;height:80px;border-radius:50%;border:3px solid rgba(255,255,255,0.4);object-fit:cover;">
+              <div style="color:rgba(255,255,255,0.9);font-size:0.78rem;margin-top:6px;">富士子</div>
+            </div>
+            <div style="text-align:center;">
+              <img src="images/staff-yasuyo.png" alt="川合やすよ" style="width:80px;height:80px;border-radius:50%;border:3px solid rgba(255,255,255,0.4);object-fit:cover;">
+              <div style="color:rgba(255,255,255,0.9);font-size:0.78rem;margin-top:6px;">やすよ</div>
+            </div>
+            <div style="text-align:center;">
+              <img src="images/staff-takako.png" alt="川合たか子" style="width:80px;height:80px;border-radius:50%;border:3px solid rgba(255,255,255,0.4);object-fit:cover;">
+              <div style="color:rgba(255,255,255,0.9);font-size:0.78rem;margin-top:6px;">たか子</div>
+            </div>
+          </div>
+        </div>
+        <div class="staff-body">
+          <div class="role">経理・事務・保険接客</div>
+          <h3>川合 富士子 / やすよ / たか子</h3>
+          <p>経理・事務・保険・接客を3名で担当。いつも笑顔でお客様をお迎えします。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTAバナー -->
+<section class="cta-banner" id="contact">
+  <div class="section-inner">
+    <h2>お気軽にお問い合わせください</h2>
+    <p>車検・修理・中古車など、くるまのことならなんでもご相談を</p>
+    <a href="tel:0565-67-2344" class="cta-tel">📞 0565-67-2344</a>
+    <p class="cta-hours">受付時間：9:00〜17:00（日曜・祝日を除く）</p>
+    <a href="#access" class="btn-outline" style="margin-top:8px;">地図・アクセスを見る →</a>
+  </div>
+</section>
+
+<!-- アクセス -->
+<section class="access" id="access">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="en">ACCESS</div>
+      <h2>アクセス・営業情報</h2>
+      <p>お気軽にお立ち寄りください</p>
+      <div class="divider"></div>
+    </div>
+    <div class="access-grid">
+      <div class="access-info">
+        <h3>足助川合自動車株式会社</h3>
+        <ul class="info-list">
+          <li><span class="key">住所</span><span>愛知県豊田市平沢町中ノ田１番地</span></li>
+          <li><span class="key">電話</span><span>0565-67-2344</span></li>
+          <li><span class="key">営業時間</span><span>午前9時〜午後5時（昼休憩1時間）</span></li>
+          <li><span class="key">定休日</span><span>日曜・祝日</span></li>
+          <li><span class="key">サービス</span><span>車検・整備・修理・中古車販売・レッカー</span></li>
+        </ul>
+        <div class="tel-box">
+          <p>お電話でのお問い合わせ</p>
+          <a href="tel:0565-67-2344">0565-67-2344</a>
+          <p class="hours">受付：9:00〜17:00（日曜・祝日除く）</p>
+        </div>
+      </div>
+      <div class="map-wrap">
+        <iframe
+          src="https://maps.google.com/maps?q=愛知県豊田市平沢町中ノ田1&output=embed&z=15"
+          allowfullscreen loading="lazy">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- フッター -->
+<footer>
+  <div class="foot-logo">足助川合自動車<span>（株）</span></div>
+  <p>愛知県豊田市平沢町中ノ田１番地　TEL: 0565-67-2344</p>
+  <p style="margin-top:12px;">&copy; 2024 足助川合自動車株式会社 All Rights Reserved.</p>
+</footer>
+
+<script>
+  // ナビ スクロール時に背景を付ける
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+
+  // ======== THREE.JS ヒーロー3Dシーン ========
+  (function() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas || !window.THREE) return;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+    camera.position.set(5, 3.5, 8);
+    camera.lookAt(0, 0.5, 0);
+
+    // リサイズ対応
+    function resize() {
+      const w = canvas.parentElement.clientWidth;
+      const h = canvas.parentElement.clientHeight;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // ライト
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    const sun = new THREE.DirectionalLight(0xfff5e0, 1.5);
+    sun.position.set(6, 10, 6);
+    scene.add(sun);
+    const fill = new THREE.DirectionalLight(0x4488ff, 0.4);
+    fill.position.set(-6, 4, -4);
+    scene.add(fill);
+
+    // 地面（道路）
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(60, 60),
+      new THREE.MeshStandardMaterial({ color: 0x111822, roughness: 1 })
+    );
+    ground.rotation.x = -Math.PI / 2;
+    scene.add(ground);
+
+    // 道路ライン
+    for (let i = -5; i <= 5; i++) {
+      const line = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.15, 3),
+        new THREE.MeshStandardMaterial({ color: 0xffaa00, emissive: 0xff8800, emissiveIntensity: 0.3 })
+      );
+      line.rotation.x = -Math.PI / 2;
+      line.position.set(0, 0.01, i * 4.5);
+      scene.add(line);
+    }
+
+    // 車を作成
+    function makeCar(color) {
+      const g = new THREE.Group();
+      const mat = c => new THREE.MeshStandardMaterial({ color: c, metalness: 0.5, roughness: 0.3 });
+
+      // ボディ
+      const body = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.55, 3.8), mat(color));
+      body.position.y = 0.45;
+      g.add(body);
+
+      // キャビン
+      const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.55, 2), mat(color === 0xe63900 ? 0xcc2200 : 0x1a3a6a));
+      cabin.position.set(0, 0.99, -0.15);
+      g.add(cabin);
+
+      // フロントガラス
+      const glass = new THREE.MeshStandardMaterial({ color: 0x88ccff, transparent: true, opacity: 0.45, metalness: 0.1 });
+      const fw = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.44, 0.08), glass);
+      fw.position.set(0, 0.99, 0.84);
+      g.add(fw);
+
+      // タイヤ
+      const wMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9 });
+      const hMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.8 });
+      [[-.95,0,1.2],[.95,0,1.2],[-.95,0,-1.2],[.95,0,-1.2]].forEach(([x,y,z]) => {
+        const w = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.28, 16), wMat);
+        w.rotation.z = Math.PI / 2;
+        w.position.set(x, 0.38, z);
+        g.add(w);
+        const h = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.3, 8), hMat);
+        h.rotation.z = Math.PI / 2;
+        h.position.set(x, 0.38, z);
+        g.add(h);
+      });
+
+      // ヘッドライト
+      const lMat = new THREE.MeshStandardMaterial({ color: 0xffffcc, emissive: 0xffffaa, emissiveIntensity: 2 });
+      [-0.55, 0.55].forEach(x => {
+        const l = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.16, 0.08), lMat);
+        l.position.set(x, 0.45, 1.94);
+        g.add(l);
+      });
+
+      return g;
+    }
+
+    const car = makeCar(0xe63900); // ダイハツ風オレンジ赤
+    scene.add(car);
+
+    // 木を配置
+    function makeTree(x, z) {
+      const g = new THREE.Group();
+      const trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.1, 0.14, 1.2, 6),
+        new THREE.MeshStandardMaterial({ color: 0x8B4513 })
+      );
+      trunk.position.y = 0.6;
+      g.add(trunk);
+      const leaves = new THREE.Mesh(
+        new THREE.ConeGeometry(0.7, 1.8, 7),
+        new THREE.MeshStandardMaterial({ color: 0x2d7a3a, roughness: 0.8 })
+      );
+      leaves.position.y = 2.1;
+      g.add(leaves);
+      g.position.set(x, 0, z);
+      return g;
+    }
+    [[-4,3],[-4,-3],[-4,9],[4,6],[4,-6],[-5,-9],[5,0],[-3,12],[5,-12],[4,12]].forEach(([x,z]) => {
+      scene.add(makeTree(x, z));
+    });
+
+    // パーティクル（星/ほこり）
+    const pGeo = new THREE.BufferGeometry();
+    const pCount = 120;
+    const pPos = new Float32Array(pCount * 3);
+    for (let i = 0; i < pCount * 3; i++) pPos[i] = (Math.random() - 0.5) * 30;
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+    const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0xff9933, size: 0.06, transparent: true, opacity: 0.5 }));
+    scene.add(particles);
+
+    // アニメーション
+    let t = 0;
+    const wheels = car.children.filter((_, i) => i >= 3 && i <= 6);
+    function animate() {
+      requestAnimationFrame(animate);
+      t += 0.008;
+      car.position.y = Math.sin(t * 1.2) * 0.04;
+      car.rotation.y = Math.sin(t * 0.4) * 0.06;
+      car.children.forEach(c => {
+        if (c.geometry && c.geometry.type === 'CylinderGeometry') c.rotation.x += 0.04;
+      });
+      camera.position.x = Math.sin(t * 0.18) * 5 + 2;
+      camera.position.z = Math.cos(t * 0.18) * 5 + 6;
+      camera.lookAt(0, 0.5, 0);
+      particles.rotation.y += 0.001;
+      renderer.render(scene, camera);
+    }
+    animate();
+  })();
+
+  // ======== スクロールアニメーション ========
+  const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
