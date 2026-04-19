@@ -1418,7 +1418,7 @@
         b.position.x = Math.cos(a) * r;
         b.position.z = Math.sin(a) * r;
         b.position.y = b.userData.h + Math.sin(t*1.2 + b.userData.phase)*0.4;
-        b.rotation.y = -a + Math.PI / 2;
+        b.rotation.y = -a;
         const flapAngle = Math.sin(t * 5 + b.userData.phase) * 0.45;
         b.userData.pivotL.rotation.z = flapAngle;
         b.userData.pivotR.rotation.z = -flapAngle;
