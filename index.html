@@ -1070,7 +1070,8 @@
 
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: false, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = false;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 120);
@@ -1096,6 +1097,14 @@
     scene.add(new THREE.AmbientLight(0xfff8e8, 1.1));
     const sunLight = new THREE.DirectionalLight(0xfffce8, 2.0);
     sunLight.position.set(10, 18, 8);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.set(1024, 1024);
+    sunLight.shadow.camera.near = 0.5;
+    sunLight.shadow.camera.far = 80;
+    sunLight.shadow.camera.left = -40;
+    sunLight.shadow.camera.right = 40;
+    sunLight.shadow.camera.top = 40;
+    sunLight.shadow.camera.bottom = -40;
     scene.add(sunLight);
     const fillLight = new THREE.DirectionalLight(0xd0eeff, 0.5);
     fillLight.position.set(-8, 6, -5);
@@ -1139,6 +1148,7 @@
       new THREE.MeshStandardMaterial({ color: 0x2e8b3a, roughness: 0.9 })
     );
     grass.rotation.x = -Math.PI / 2;
+    grass.receiveShadow = true;
     scene.add(grass);
 
     // 丘（背景）
@@ -1147,6 +1157,8 @@
       const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0x1a6b2e, roughness: 0.9 }));
       m.scale.set(sx, sy, 1);
       m.position.set(x, -sy*3.5, z);
+      m.castShadow = true;
+      m.receiveShadow = true;
       return m;
     }
     [[-18,-20,3.5,2],[ 0,-22,2.8,1.8],[18,-20,3.2,2.0],[-10,-25,2.5,1.5],[12,-23,2.8,1.6]].forEach(([x,z,sx,sy]) => {
