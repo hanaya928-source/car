@@ -1363,14 +1363,24 @@
         shape.lineTo(0, 0);
         return new THREE.ShapeGeometry(shape);
       };
-      const wL = new THREE.Mesh(makeWing(-1), matGray);
-      wL.rotation.x = -Math.PI / 2;
-      wL.position.set(0, 0.02, 0);
-      g.add(wL);
-      const wR = new THREE.Mesh(makeWing(1), matGray);
-      wR.rotation.x = -Math.PI / 2;
-      wR.position.set(0, 0.02, 0);
-      g.add(wR);
+      // 翼をピボットグループで包んで羽ばたき対応
+      const pivotL = new THREE.Group();
+      const meshL = new THREE.Mesh(makeWing(-1), matGray);
+      meshL.rotation.x = -Math.PI / 2;
+      pivotL.add(meshL);
+      pivotL.position.set(0, 0.02, 0);
+      g.add(pivotL);
+
+      const pivotR = new THREE.Group();
+      const meshR = new THREE.Mesh(makeWing(1), matGray);
+      meshR.rotation.x = -Math.PI / 2;
+      pivotR.add(meshR);
+      pivotR.position.set(0, 0.02, 0);
+      g.add(pivotR);
+
+      // ピボットへの参照を保存
+      g.userData.pivotL = pivotL;
+      g.userData.pivotR = pivotR;
 
       return g;
     }
@@ -1409,9 +1419,9 @@
         b.position.z = Math.sin(a) * r;
         b.position.y = b.userData.h + Math.sin(t*1.2 + b.userData.phase)*0.4;
         b.rotation.y = -a + Math.PI / 2;
-        const flapAngle = Math.sin(t * 6 + b.userData.phase) * 0.4;
-        b.children[0].rotation.z = 0.3 + flapAngle;
-        b.children[1].rotation.z = -0.3 - flapAngle;
+        const flapAngle = Math.sin(t * 5 + b.userData.phase) * 0.45;
+        b.userData.pivotL.rotation.z = flapAngle;
+        b.userData.pivotR.rotation.z = -flapAngle;
       });
       renderer.render(scene, camera);
     }
