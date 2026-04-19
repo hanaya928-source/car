@@ -1324,58 +1324,52 @@
     car.position.set(0, 0, 3.5);
     scene.add(car);
 
-    // 小鳥（リアル形状）
+    // カモメ
     function makeBird() {
       const g = new THREE.Group();
-      const mat = new THREE.MeshStandardMaterial({ color: 0x2a3a4a, roughness: 0.6, metalness: 0.05 });
-      const matBelly = new THREE.MeshStandardMaterial({ color: 0xc8c8b0, roughness: 0.8 });
+      const matWhite = new THREE.MeshStandardMaterial({ color: 0xf0f0f0, roughness: 0.7, side: THREE.DoubleSide });
+      const matGray  = new THREE.MeshStandardMaterial({ color: 0x8899aa, roughness: 0.7, side: THREE.DoubleSide });
+      const matYellow= new THREE.MeshStandardMaterial({ color: 0xf0b020, roughness: 0.6 });
 
-      // 胴体（紡錘形）
-      const body = new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 6), mat);
-      body.scale.set(1, 0.75, 1.8);
-      body.position.set(0, 0, 0);
+      // 胴体
+      const body = new THREE.Mesh(new THREE.SphereGeometry(0.13, 8, 6), matWhite);
+      body.scale.set(1, 0.7, 2.0);
       g.add(body);
 
-      // お腹
-      const belly = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 6), matBelly);
-      belly.scale.set(0.9, 0.55, 1.4);
-      belly.position.set(0, -0.05, 0.02);
-      g.add(belly);
-
       // 頭
-      const head = new THREE.Mesh(new THREE.SphereGeometry(0.085, 8, 6), mat);
-      head.position.set(0, 0.06, 0.22);
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 6), matWhite);
+      head.position.set(0, 0.07, 0.27);
       g.add(head);
 
-      // くちばし
-      const beak = new THREE.Mesh(new THREE.ConeGeometry(0.02, 0.1, 5), mat);
-      beak.rotation.x = -Math.PI / 2;
-      beak.position.set(0, 0.06, 0.33);
+      // くちばし（黄色・やや下向き）
+      const beak = new THREE.Mesh(new THREE.ConeGeometry(0.018, 0.12, 5), matYellow);
+      beak.rotation.x = -Math.PI / 2 + 0.25;
+      beak.position.set(0, 0.02, 0.4);
       g.add(beak);
 
-      // 尾羽
-      const tail = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.2, 4), mat);
+      // 尾羽（扇形）
+      const tail = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.22, 4), matGray);
       tail.rotation.x = Math.PI / 2;
-      tail.position.set(0, -0.02, -0.28);
+      tail.position.set(0, -0.01, -0.32);
       g.add(tail);
 
-      // 翼（左右）
-      const wingShape = new THREE.Shape();
-      wingShape.moveTo(0, 0);
-      wingShape.quadraticCurveTo(0.25, 0.12, 0.55, 0.06);
-      wingShape.quadraticCurveTo(0.35, -0.04, 0.1, -0.1);
-      wingShape.lineTo(0, 0);
-      const wingGeo = new THREE.ShapeGeometry(wingShape);
-      const wMat = new THREE.MeshStandardMaterial({ color: 0x2a3a4a, side: THREE.DoubleSide, roughness: 0.7 });
-
-      const wL = new THREE.Mesh(wingGeo, wMat);
-      wL.rotation.y = Math.PI;
-      wL.position.set(-0.05, 0.01, 0);
+      // 翼（長くて先が尖ったカモメ型）
+      const makeWing = (side) => {
+        const shape = new THREE.Shape();
+        shape.moveTo(0, 0);
+        shape.quadraticCurveTo(side*0.4, 0.05, side*0.9, -0.05);
+        shape.lineTo(side*1.1, -0.12);
+        shape.quadraticCurveTo(side*0.5, -0.18, side*0.1, -0.14);
+        shape.lineTo(0, 0);
+        return new THREE.ShapeGeometry(shape);
+      };
+      const wL = new THREE.Mesh(makeWing(-1), matGray);
+      wL.rotation.x = -Math.PI / 2;
+      wL.position.set(0, 0.02, 0);
       g.add(wL);
-
-      const wR = new THREE.Mesh(wingGeo, wMat);
-      wR.rotation.x = Math.PI;
-      wR.position.set(0.05, 0.01, 0);
+      const wR = new THREE.Mesh(makeWing(1), matGray);
+      wR.rotation.x = -Math.PI / 2;
+      wR.position.set(0, 0.02, 0);
       g.add(wR);
 
       return g;
