@@ -1073,9 +1073,9 @@
     renderer.shadowMap.enabled = false;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(62, 1, 0.1, 120);
-    camera.position.set(0, 4.5, 10);
-    camera.lookAt(0, 0.8, -6);
+    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 120);
+    camera.position.set(0, 18, 14);
+    camera.lookAt(0, 0, -5);
 
     function resize() {
       const w = canvas.parentElement.clientWidth;
@@ -1312,9 +1312,11 @@
         if (c.geometry && c.geometry.parameters && c.geometry.parameters.radiusTop === 0.37)
           c.rotation.x -= 0.045;
       });
-      camera.position.x = Math.sin(t*0.12)*0.6;
-      camera.position.y = 4.5 + Math.sin(t*0.2)*0.15;
-      camera.lookAt(0, 0.8, -6);
+      const radius = 22;
+      camera.position.x = Math.sin(t * 0.08) * radius;
+      camera.position.z = Math.cos(t * 0.08) * radius;
+      camera.position.y = 16 + Math.sin(t * 0.05) * 3;
+      camera.lookAt(0, 0, -3);
       const pos = pGeo.attributes.position.array;
       for (let i = 0; i < pCount; i++) {
         pos[i*3]   += pVel[i*3] + Math.sin(t*0.7+i)*0.003;
