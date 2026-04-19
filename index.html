@@ -1256,7 +1256,7 @@
       g.add(cabin);
       // フロントガラス
       const glassM = new THREE.MeshStandardMaterial({ color: 0x88ccff, transparent: true, opacity: 0.55, metalness: 0.1 });
-      [[ 0.82, 0],[−0.82, 0]].forEach(([zp, _]) => {
+      [[ 0.82, 0],[-0.82, 0]].forEach(([zp, _]) => {
         const fw = new THREE.Mesh(new THREE.BoxGeometry(1.32, 0.42, 0.08), glassM);
         fw.position.set(0, 0.97, zp);
         g.add(fw);
