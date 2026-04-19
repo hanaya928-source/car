@@ -126,6 +126,20 @@
     .hero-glass {
       max-width: 700px;
     }
+    .hero-desc--bottom {
+      position: absolute;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      padding: 16px 32px;
+      border-radius: 16px;
+      white-space: nowrap;
+      z-index: 2;
+    }
     .hero-badge {
       display: inline-flex;
       align-items: center;
@@ -785,17 +799,17 @@
         暮らしの足を支え<br>
         地元の人を<span>愛し、愛される</span>
       </h1>
-      <p class="hero-desc">
-        車検・整備・修理・中古車販売まで。<br>
-        創業から地域のみなさまとともに歩んできた、<br>
-        家族経営のあなたの街のくるま屋さんです。
-      </p>
       <div class="hero-actions">
         <a href="tel:0565-67-2344" class="btn-primary">📞 0565-67-2344</a>
         <a href="#services" class="btn-outline">サービスを見る →</a>
       </div>
     </div>
   </div>
+  <p class="hero-desc hero-desc--bottom">
+    車検・整備・修理・中古車販売まで。<br>
+    創業から地域のみなさまとともに歩んできた、<br>
+    家族経営のあなたの街のくるま屋さんです。
+  </p>
   <div class="hero-stats">
     <div class="stat-card">
       <div class="num">30<small style="font-size:1rem">年+</small></div>
