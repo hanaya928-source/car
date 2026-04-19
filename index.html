@@ -1327,10 +1327,10 @@
         if (c.geometry && c.geometry.parameters && c.geometry.parameters.radiusTop === 0.37)
           c.rotation.x -= 0.045;
       });
-      const radius = 22;
+      const radius = 15;
       camera.position.x = Math.sin(t * 0.08) * radius;
       camera.position.z = Math.cos(t * 0.08) * radius;
-      camera.position.y = 16 + Math.sin(t * 0.05) * 3;
+      camera.position.y = 12 + Math.sin(t * 0.05) * 2;
       camera.lookAt(0, 0, -3);
       const pos = pGeo.attributes.position.array;
       for (let i = 0; i < pCount; i++) {
