@@ -1391,7 +1391,7 @@
       const angle = Math.random() * Math.PI * 2;
       const r = 6 + Math.random() * 10;
       b.position.set(Math.cos(angle)*r, 6 + Math.random()*5, Math.sin(angle)*r);
-      b.userData = { angle, r, speed: 0.003 + Math.random()*0.004, h: b.position.y, phase: Math.random()*Math.PI*2 };
+      Object.assign(b.userData, { angle, r, speed: 0.003 + Math.random()*0.004, h: b.position.y, phase: Math.random()*Math.PI*2 });
       scene.add(b);
       birds.push(b);
     }
