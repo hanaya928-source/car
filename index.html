@@ -89,9 +89,8 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(135deg, rgba(13,33,55,0.88) 0%, rgba(13,33,55,0.6) 60%, rgba(232,117,10,0.25) 100%),
-        url('images/hero.jpg') center/cover no-repeat;
-      background-color: var(--navy);
+        linear-gradient(160deg, rgba(180,235,160,0.45) 0%, rgba(140,220,130,0.35) 60%, rgba(200,240,170,0.4) 100%);
+      background-color: #c8edb0;
     }
     /* 写真がない間の仮背景 */
     .hero-bg::after {
@@ -105,7 +104,7 @@
       position: absolute;
       inset: 0;
       background-image:
-        radial-gradient(circle, rgba(255,147,52,0.15) 1px, transparent 1px);
+        radial-gradient(circle, rgba(80,190,50,0.28) 1px, transparent 1px);
       background-size: 60px 60px;
     }
     .hero-content {
@@ -263,7 +262,7 @@
       z-index: 1;
       pointer-events: none;
     }
-    .hero-bg, .hero-particles { z-index: 0; }
+    .hero-bg, .hero-particles { z-index: 0; display: none; }
     .hero-content, .hero-stats, .hero-scroll { z-index: 2; }
 
     /* ======== DAIHATSU BADGE ======== */
@@ -1069,15 +1068,15 @@
     const canvas = document.getElementById('hero-canvas');
     if (!canvas || !window.THREE) return;
 
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: false, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = false;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
-    camera.position.set(5, 3.5, 8);
-    camera.lookAt(0, 0.5, 0);
+    const camera = new THREE.PerspectiveCamera(62, 1, 0.1, 120);
+    camera.position.set(0, 4.5, 10);
+    camera.lookAt(0, 0.8, -6);
 
-    // リサイズ対応
     function resize() {
       const w = canvas.parentElement.clientWidth;
       const h = canvas.parentElement.clientHeight;
@@ -1088,131 +1087,242 @@
     resize();
     window.addEventListener('resize', resize);
 
-    // ライト
-    scene.background = new THREE.Color(0x4a7fb5);
-    scene.fog = new THREE.Fog(0x4a7fb5, 15, 40);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-    const sun = new THREE.DirectionalLight(0xfff5e0, 1.5);
-    sun.position.set(6, 10, 6);
-    scene.add(sun);
-    const fill = new THREE.DirectionalLight(0x4488ff, 0.4);
-    fill.position.set(-6, 4, -4);
-    scene.add(fill);
+    // 春の空・霧
+    scene.background = new THREE.Color(0x87ceeb);
+    scene.fog = new THREE.Fog(0xc5e8f8, 22, 55);
 
-    // 地面（道路）
-    const ground = new THREE.Mesh(
-      new THREE.PlaneGeometry(60, 60),
-      new THREE.MeshStandardMaterial({ color: 0x445566, roughness: 1 })
+    // ライト（明るい春の日差し）
+    scene.add(new THREE.AmbientLight(0xfff8e8, 1.1));
+    const sunLight = new THREE.DirectionalLight(0xfffce8, 2.0);
+    sunLight.position.set(10, 18, 8);
+    scene.add(sunLight);
+    const fillLight = new THREE.DirectionalLight(0xd0eeff, 0.5);
+    fillLight.position.set(-8, 6, -5);
+    scene.add(fillLight);
+
+    // 太陽（黄色球）
+    const sunMesh = new THREE.Mesh(
+      new THREE.SphereGeometry(1.8, 16, 12),
+      new THREE.MeshBasicMaterial({ color: 0xFFD700 })
     );
-    ground.rotation.x = -Math.PI / 2;
-    scene.add(ground);
+    sunMesh.position.set(18, 14, -20);
+    scene.add(sunMesh);
+    const sunGlow = new THREE.Mesh(
+      new THREE.SphereGeometry(2.6, 16, 12),
+      new THREE.MeshBasicMaterial({ color: 0xFFE040, transparent: true, opacity: 0.22 })
+    );
+    sunGlow.position.copy(sunMesh.position);
+    scene.add(sunGlow);
 
-    // 道路ライン
-    for (let i = -5; i <= 5; i++) {
-      const line = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.15, 3),
-        new THREE.MeshStandardMaterial({ color: 0xffaa00, emissive: 0xff8800, emissiveIntensity: 0.3 })
-      );
-      line.rotation.x = -Math.PI / 2;
-      line.position.set(0, 0.01, i * 4.5);
-      scene.add(line);
-    }
-
-    // 車を作成
-    function makeCar(color) {
+    // 雲を作成
+    function makeCloud(x, y, z, scale) {
       const g = new THREE.Group();
-      const mat = c => new THREE.MeshStandardMaterial({ color: c, metalness: 0.5, roughness: 0.3 });
-
-      // ボディ
-      const body = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.55, 3.8), mat(color));
-      body.position.y = 0.45;
-      g.add(body);
-
-      // キャビン
-      const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.55, 2), mat(color === 0xe63900 ? 0xcc2200 : 0x1a3a6a));
-      cabin.position.set(0, 0.99, -0.15);
-      g.add(cabin);
-
-      // フロントガラス
-      const glass = new THREE.MeshStandardMaterial({ color: 0x88ccff, transparent: true, opacity: 0.45, metalness: 0.1 });
-      const fw = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.44, 0.08), glass);
-      fw.position.set(0, 0.99, 0.84);
-      g.add(fw);
-
-      // タイヤ
-      const wMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9 });
-      const hMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.8 });
-      [[-.95,0,1.2],[.95,0,1.2],[-.95,0,-1.2],[.95,0,-1.2]].forEach(([x,y,z]) => {
-        const w = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.28, 16), wMat);
-        w.rotation.z = Math.PI / 2;
-        w.position.set(x, 0.38, z);
-        g.add(w);
-        const h = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.3, 8), hMat);
-        h.rotation.z = Math.PI / 2;
-        h.position.set(x, 0.38, z);
-        g.add(h);
+      const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 });
+      const configs = [[0,0,0,1.2],[1.4,0.2,0,1.0],[-1.2,0.1,0,0.9],[0.4,0.6,0,0.85],[-0.4,0.5,0.3,0.75]];
+      configs.forEach(([dx,dy,dz,r]) => {
+        const s = new THREE.Mesh(new THREE.SphereGeometry(r, 9, 7), mat);
+        s.position.set(dx, dy, dz);
+        g.add(s);
       });
-
-      // ヘッドライト
-      const lMat = new THREE.MeshStandardMaterial({ color: 0xffffcc, emissive: 0xffffaa, emissiveIntensity: 2 });
-      [-0.55, 0.55].forEach(x => {
-        const l = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.16, 0.08), lMat);
-        l.position.set(x, 0.45, 1.94);
-        g.add(l);
-      });
-
+      g.position.set(x, y, z);
+      g.scale.setScalar(scale);
       return g;
     }
+    [[-14,8,-18,1.4],[-4,9,-22,1.1],[8,7,-20,1.2],[18,8.5,-15,0.9]].forEach(([x,y,z,s]) => {
+      scene.add(makeCloud(x,y,z,s));
+    });
 
-    const car = makeCar(0xe63900); // ダイハツ風オレンジ赤
-    scene.add(car);
+    // 草地
+    const grass = new THREE.Mesh(
+      new THREE.PlaneGeometry(80, 80),
+      new THREE.MeshStandardMaterial({ color: 0x78c840, roughness: 0.9 })
+    );
+    grass.rotation.x = -Math.PI / 2;
+    scene.add(grass);
 
-    // 木を配置
-    function makeTree(x, z) {
+    // 丘（背景）
+    function makeHill(x, z, sx, sy) {
+      const geo = new THREE.SphereGeometry(5, 12, 8);
+      const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0x90cc50, roughness: 0.9 }));
+      m.scale.set(sx, sy, 1);
+      m.position.set(x, -sy*3.5, z);
+      return m;
+    }
+    [[-18,-20,3.5,2],[ 0,-22,2.8,1.8],[18,-20,3.2,2.0],[-10,-25,2.5,1.5],[12,-23,2.8,1.6]].forEach(([x,z,sx,sy]) => {
+      scene.add(makeHill(x,z,sx,sy));
+    });
+
+    // 道路（明るいグレー）
+    const road = new THREE.Mesh(
+      new THREE.PlaneGeometry(5, 80),
+      new THREE.MeshStandardMaterial({ color: 0x8a9ab0, roughness: 0.95 })
+    );
+    road.rotation.x = -Math.PI / 2;
+    road.position.y = 0.005;
+    scene.add(road);
+
+    // 道路端の縁
+    [-2.65, 2.65].forEach(x => {
+      const edge = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.2, 80),
+        new THREE.MeshStandardMaterial({ color: 0x6a7a88, roughness: 1 })
+      );
+      edge.rotation.x = -Math.PI / 2;
+      edge.position.set(x, 0.006, 0);
+      scene.add(edge);
+    });
+
+    // 道路の白い破線
+    for (let i = -10; i <= 10; i++) {
+      const dash = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.14, 2.5),
+        new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.1 })
+      );
+      dash.rotation.x = -Math.PI / 2;
+      dash.position.set(0, 0.01, i * 4.5);
+      scene.add(dash);
+    }
+
+    // 桜の木
+    function makeSakura(x, z, s) {
+      s = s || 1;
       const g = new THREE.Group();
       const trunk = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.1, 0.14, 1.2, 6),
-        new THREE.MeshStandardMaterial({ color: 0x8B4513 })
+        new THREE.CylinderGeometry(0.13*s, 0.18*s, 2.2*s, 8),
+        new THREE.MeshStandardMaterial({ color: 0x8B5E3C })
       );
-      trunk.position.y = 0.6;
+      trunk.position.y = 1.1*s;
       g.add(trunk);
-      const leaves = new THREE.Mesh(
-        new THREE.ConeGeometry(0.7, 1.8, 7),
-        new THREE.MeshStandardMaterial({ color: 0x2d7a3a, roughness: 0.8 })
-      );
-      leaves.position.y = 2.1;
-      g.add(leaves);
+      const cols = [0xffb3d1, 0xff9ec4, 0xffcce0, 0xffaad4, 0xffd0e8];
+      const blobs = [[0,3.0,0,1.3],[0.9,2.7,0.6,1.0],[-0.8,2.8,0.5,0.95],[0.4,2.5,-0.8,0.9],[-0.5,3.3,-0.4,0.85],[0.2,3.6,0.3,0.75]];
+      blobs.forEach(([dx,dy,dz,r], i) => {
+        const b = new THREE.Mesh(
+          new THREE.SphereGeometry(r*s, 9, 7),
+          new THREE.MeshStandardMaterial({ color: cols[i%cols.length], roughness: 0.75 })
+        );
+        b.position.set(dx*s, dy*s, dz*s);
+        g.add(b);
+      });
       g.position.set(x, 0, z);
       return g;
     }
-    [[-4,3],[-4,-3],[-4,9],[4,6],[4,-6],[-5,-9],[5,0],[-3,12],[5,-12],[4,12]].forEach(([x,z]) => {
-      scene.add(makeTree(x, z));
-    });
 
-    // パーティクル（星/ほこり）
+    // 桜並木（左右・近中遠）
+    [
+      [-4.5, 5, 1.1],[-4.5, -1, 1.0],[-4.8, -7, 0.9],[-5.0,-13, 0.8],[-5.2,-18,0.65],
+      [ 4.5, 5, 1.1],[ 4.5, -1, 1.0],[ 4.8, -7, 0.9],[ 5.0,-13, 0.8],[ 5.2,-18,0.65]
+    ].forEach(([x,z,s]) => scene.add(makeSakura(x, z, s)));
+
+    // カラフルな花
+    const flowerCols = [0xFF6090, 0xFF9900, 0xFFEE30, 0xFF4466, 0xffffff, 0xaa55ff, 0x44ccff, 0xFF3388];
+    function makeFlowerPatch(cx, cz, count) {
+      const g = new THREE.Group();
+      for (let i = 0; i < count; i++) {
+        const rx = (Math.random()-0.5)*2.2;
+        const rz = (Math.random()-0.5)*2.5;
+        const col = flowerCols[Math.floor(Math.random()*flowerCols.length)];
+        const stem = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.025, 0.025, 0.38, 5),
+          new THREE.MeshStandardMaterial({ color: 0x4a9020 })
+        );
+        stem.position.set(rx, 0.19, rz);
+        g.add(stem);
+        const head = new THREE.Mesh(
+          new THREE.SphereGeometry(0.13, 8, 6),
+          new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.2 })
+        );
+        head.position.set(rx, 0.42, rz);
+        g.add(head);
+      }
+      g.position.set(cx, 0, cz);
+      return g;
+    }
+    for (let z = 6; z >= -16; z -= 2.5) {
+      scene.add(makeFlowerPatch(-3.4 - Math.random()*0.8, z, 8));
+      scene.add(makeFlowerPatch( 3.4 + Math.random()*0.8, z, 8));
+    }
+
+    // 赤い車
+    function makeRedCar() {
+      const g = new THREE.Group();
+      const mat = c => new THREE.MeshStandardMaterial({ color: c, metalness: 0.35, roughness: 0.35 });
+      // ボディ
+      const body = new THREE.Mesh(new THREE.BoxGeometry(1.75, 0.52, 3.6), mat(0xd82020));
+      body.position.y = 0.44;
+      g.add(body);
+      // キャビン
+      const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.42, 0.52, 2.0), mat(0xbf1010));
+      cabin.position.set(0, 0.96, -0.15);
+      g.add(cabin);
+      // フロントガラス
+      const glassM = new THREE.MeshStandardMaterial({ color: 0x88ccff, transparent: true, opacity: 0.55, metalness: 0.1 });
+      [[ 0.82, 0],[−0.82, 0]].forEach(([zp, _]) => {
+        const fw = new THREE.Mesh(new THREE.BoxGeometry(1.32, 0.42, 0.08), glassM);
+        fw.position.set(0, 0.97, zp);
+        g.add(fw);
+      });
+      // テールライト
+      const tl = new THREE.MeshStandardMaterial({ color: 0xff2222, emissive: 0xff0000, emissiveIntensity: 0.9 });
+      [-0.56, 0.56].forEach(x => {
+        const l = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.15, 0.07), tl);
+        l.position.set(x, 0.44, -1.84);
+        g.add(l);
+      });
+      // タイヤ
+      const wM = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.9 });
+      const hM = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.8 });
+      [[-.93,0,1.15],[.93,0,1.15],[-.93,0,-1.15],[.93,0,-1.15]].forEach(([x,y,z]) => {
+        const w = new THREE.Mesh(new THREE.CylinderGeometry(0.37, 0.37, 0.26, 16), wM);
+        w.rotation.z = Math.PI/2; w.position.set(x, 0.37, z); g.add(w);
+        const h = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.28, 8), hM);
+        h.rotation.z = Math.PI/2; h.position.set(x, 0.37, z); g.add(h);
+      });
+      return g;
+    }
+    const car = makeRedCar();
+    car.position.set(0, 0, 3.5);
+    scene.add(car);
+
+    // 花びらパーティクル
     const pGeo = new THREE.BufferGeometry();
-    const pCount = 120;
+    const pCount = 260;
     const pPos = new Float32Array(pCount * 3);
-    for (let i = 0; i < pCount * 3; i++) pPos[i] = (Math.random() - 0.5) * 30;
+    const pVel = new Float32Array(pCount * 3);
+    for (let i = 0; i < pCount; i++) {
+      pPos[i*3]   = (Math.random()-0.5)*24;
+      pPos[i*3+1] = Math.random()*10;
+      pPos[i*3+2] = (Math.random()-0.5)*24;
+      pVel[i*3]   = (Math.random()-0.5)*0.007;
+      pVel[i*3+1] = -(0.004 + Math.random()*0.007);
+      pVel[i*3+2] = (Math.random()-0.5)*0.007;
+    }
     pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-    const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0xff9933, size: 0.06, transparent: true, opacity: 0.5 }));
+    const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
+      color: 0xffb3d9, size: 0.16, transparent: true, opacity: 0.9
+    }));
     scene.add(particles);
 
     // アニメーション
     let t = 0;
-    const wheels = car.children.filter((_, i) => i >= 3 && i <= 6);
     function animate() {
       requestAnimationFrame(animate);
-      t += 0.008;
-      car.position.y = Math.sin(t * 1.2) * 0.04;
-      car.rotation.y = Math.sin(t * 0.4) * 0.06;
+      t += 0.007;
+      car.position.y = Math.sin(t*1.4)*0.025;
       car.children.forEach(c => {
-        if (c.geometry && c.geometry.type === 'CylinderGeometry') c.rotation.x += 0.04;
+        if (c.geometry && c.geometry.parameters && c.geometry.parameters.radiusTop === 0.37)
+          c.rotation.x -= 0.045;
       });
-      camera.position.x = Math.sin(t * 0.18) * 5 + 2;
-      camera.position.z = Math.cos(t * 0.18) * 5 + 6;
-      camera.lookAt(0, 0.5, 0);
-      particles.rotation.y += 0.001;
+      camera.position.x = Math.sin(t*0.12)*0.6;
+      camera.position.y = 4.5 + Math.sin(t*0.2)*0.15;
+      camera.lookAt(0, 0.8, -6);
+      const pos = pGeo.attributes.position.array;
+      for (let i = 0; i < pCount; i++) {
+        pos[i*3]   += pVel[i*3] + Math.sin(t*0.7+i)*0.003;
+        pos[i*3+1] += pVel[i*3+1];
+        pos[i*3+2] += pVel[i*3+2];
+        if (pos[i*3+1] < -1) pos[i*3+1] = 10;
+      }
+      pGeo.attributes.position.needsUpdate = true;
       renderer.render(scene, camera);
     }
     animate();
