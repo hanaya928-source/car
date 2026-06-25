@@ -678,6 +678,72 @@
     }
     .cta-tel:hover { opacity: 0.85; }
     .cta-hours { color: rgba(255,255,255,0.55); font-size: 0.9rem; margin-bottom: 32px; }
+    .contact-form-wrap {
+      margin-top: 48px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+    .form-title {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.88rem;
+      margin-bottom: 6px;
+    }
+    .required {
+      background: var(--orange);
+      color: white;
+      font-size: 0.72rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.2s;
+      box-sizing: border-box;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(255,255,255,0.35); }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: var(--orange); }
+    .form-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--orange);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+    .form-submit:hover { background: var(--orange2); }
 
     /* ======== ACCESS ======== */
     .access { background: var(--light); }
@@ -1077,6 +1143,33 @@
     <a href="tel:0565-67-2344" class="cta-tel">📞 0565-67-2344</a>
     <p class="cta-hours">受付時間：9:00〜17:00（日曜・祝日・第２・第３土曜日を除く）</p>
     <a href="#access" class="btn-outline" style="margin-top:8px;">地図・アクセスを見る →</a>
+
+    <!-- お問い合わせフォーム -->
+    <div class="contact-form-wrap">
+      <h3 class="form-title">メールでのお問い合わせ</h3>
+      <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
+        <input type="hidden" name="access_key" value="032cf9c0-9683-41cb-b7be-bda5bf17eff6">
+        <input type="hidden" name="subject" value="足助川合自動車HPからのお問い合わせ">
+        <input type="hidden" name="redirect" value="">
+        <div class="form-group">
+          <label>お名前 <span class="required">必須</span></label>
+          <input type="text" name="name" placeholder="例：山田 太郎" required>
+        </div>
+        <div class="form-group">
+          <label>電話番号</label>
+          <input type="tel" name="phone" placeholder="例：0565-00-0000">
+        </div>
+        <div class="form-group">
+          <label>メールアドレス</label>
+          <input type="email" name="email" placeholder="例：example@gmail.com">
+        </div>
+        <div class="form-group">
+          <label>お問い合わせ内容 <span class="required">必須</span></label>
+          <textarea name="message" rows="5" placeholder="お問い合わせ内容をご記入ください" required></textarea>
+        </div>
+        <button type="submit" class="form-submit">送信する</button>
+      </form>
+    </div>
   </div>
 </section>
 
