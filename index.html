@@ -723,6 +723,47 @@
       text-decoration: none;
     }
     .tel-box .hours { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-top: 6px; }
+    .fb-box {
+      margin-top: 24px;
+      padding: 20px 24px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .fb-label {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+    .fb-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #1877F2;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .fb-btn:hover { background: #1464d8; }
+    .fb-qr {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .fb-qr img {
+      border-radius: 8px;
+      border: 3px solid white;
+    }
+    .fb-qr-label {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.78rem;
+    }
     .map-wrap {
       border-radius: 16px;
       overflow: hidden;
@@ -1062,6 +1103,19 @@
           <p>お電話でのお問い合わせ</p>
           <a href="tel:0565-67-2344">0565-67-2344</a>
           <p class="hours">受付：9:00〜17:00（日曜・祝日・第２・第３土曜日除く）</p>
+        </div>
+
+        <!-- Facebook -->
+        <div class="fb-box">
+          <p class="fb-label">公式Facebookページ</p>
+          <a href="https://facebook.com/asukeawaijidousya" target="_blank" rel="noopener" class="fb-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.514c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+            Facebookページはこちら
+          </a>
+          <div class="fb-qr">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://facebook.com/asukeawaijidousya" alt="Facebook QRコード" width="140" height="140">
+            <p class="fb-qr-label">QRコードを読み取ってください</p>
+          </div>
         </div>
       </div>
       <div class="map-wrap">
